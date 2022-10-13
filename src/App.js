@@ -1,58 +1,72 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
-  );
+	let [list, setList] = useState([]);
+	let [input, setInput] = useState("");
+
+	function handleChange(event) {
+		setInput(event.target.value);
+	}
+
+	function handleCheck(event) {
+		let tempArr = [...list];
+		for (let i of tempArr) {
+			if (event.target.value === i.val) {
+				i.checked = !i.checked;
+				return;
+			}
+		}
+	}
+
+	function addItem() {
+		if (input.trim() === "" || checkExists()) return;
+		setList([...list, { val: input, checked: false }]);
+		setInput("");
+	}
+
+	function removeChecked() {
+		let tempArr = [...list];
+		for (let i = list.length - 1; i >= 0; i--) {
+			if (list[i].checked) {
+				tempArr.splice(i, 1);
+			}
+		}
+		setList(tempArr);
+	}
+
+	function checkExists() {
+		for (let i of list) {
+			if (i.val === input) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	return (
+		<div className="App">
+			<header className="App-header">
+				<div className="inputWrapper">
+					<input onChange={handleChange} value={input}></input>
+					<button onClick={addItem}>add</button>
+					<button onClick={removeChecked}>remove checked</button>
+				</div>
+				<div>
+					{list.map((item) => (
+						<div key={item.val} className="inputWrapper">
+							<input
+								type="checkbox"
+								onChange={handleCheck}
+								value={item.val}
+							></input>
+							<div>{item.val}</div>
+						</div>
+					))}
+				</div>
+			</header>
+		</div>
+	);
 }
 
 export default App;
