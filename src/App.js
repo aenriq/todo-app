@@ -2,21 +2,20 @@ import React, { useState } from "react";
 import "./App.css";
 
 function App() {
-	let [list, setList] = useState([]);
-	let [input, setInput] = useState("");
+	const [list, setList] = useState([]);
+	const [input, setInput] = useState("");
 
 	function handleChange(event) {
 		setInput(event.target.value);
 	}
 
 	function handleCheck(event) {
-		let tempArr = [...list];
-		for (let i of tempArr) {
+		const tempArr = [...list];
+		tempArr.map((i) => {
 			if (event.target.value === i.val) {
 				i.checked = !i.checked;
-				return;
 			}
-		}
+		});
 	}
 
 	function addItem() {
@@ -26,22 +25,28 @@ function App() {
 	}
 
 	function removeChecked() {
-		let tempArr = [...list];
-		for (let i = list.length - 1; i >= 0; i--) {
-			if (list[i].checked) {
-				tempArr.splice(i, 1);
+		const tempArr = [...list];
+		const removeArr = [];
+		tempArr.map((i, index) => {
+			if (i.checked) {
+				removeArr.push(index);
 			}
-		}
-		setList(tempArr);
+		});
+		setList(
+			tempArr.filter((i, index) => {
+				return removeArr.indexOf(index) == -1;
+			})
+		);
 	}
 
 	function checkExists() {
-		for (let i of list) {
+		let exist = false;
+		list.map((i) => {
 			if (i.val === input) {
-				return true;
+				exist = true;
 			}
-		}
-		return false;
+		});
+		return exist;
 	}
 
 	return (
